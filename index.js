@@ -4,12 +4,12 @@ const app = express();
 
 app.use(express.json());
 
-// Universal route listener
+// Universal route listener: Catches any requests coming from Roblox
 app.all('*', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
         
-        // Target Chub's official Mars chat completions engine
+        // Target Chub's official Mars chat completions engine with 'asha' embedded in the URL path
         const response = await axios.post('https://chub.ai', req.body, {
             headers: {
                 'Authorization': authHeader,
@@ -18,10 +18,10 @@ app.all('*', async (req, res) => {
             }
         });
         
-        // Pass the raw AI generation response back to your Roblox game server
+        // Pass the clean AI JSON response back to your Roblox game server
         res.status(200).json(response.data);
     } catch (error) {
-        // If Chub rejects the call, pass the raw data error body back to Roblox to inspect
+        // If Chub rejects the call, pass the raw error back to Roblox to inspect
         if (error.response) {
             console.error("Chub Platform Response Error Code:", error.response.status);
             res.status(error.response.status).send(JSON.stringify(error.response.data));
@@ -33,5 +33,4 @@ app.all('*', async (req, res) => {
 });
 
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`Universal Proxy Node active on port ${PORT}`));
-
+app.listen(PORT, () => console.log(`Secure Relay Node active on port ${PORT}`));
