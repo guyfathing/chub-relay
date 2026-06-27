@@ -4,29 +4,28 @@ const app = express();
 
 app.use(express.json());
 
-// Universal route listener: Catches any requests coming from Roblox
+// Universal catch-all listener configuration route
 app.all('*', async (req, res) => {
     try {
         const authHeader = req.headers['authorization'];
         
-        // Target Chub's official Mars chat completions engine with 'asha' embedded in the URL path
+        // Correct base completion domain route layout
         const response = await axios.post('https://chub.ai', req.body, {
             headers: {
                 'Authorization': authHeader,
                 'Content-Type': 'application/json',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
             }
         });
         
-        // Pass the clean AI JSON response back to your Roblox game server
+        // Pass the raw AI JSON text block back to your Roblox game session
         res.status(200).json(response.data);
     } catch (error) {
-        // If Chub rejects the call, pass the raw error back to Roblox to inspect
         if (error.response) {
-            console.error("Chub Platform Response Error Code:", error.response.status);
+            console.error("Platform Error Code Exception:", error.response.status);
             res.status(error.response.status).send(JSON.stringify(error.response.data));
         } else {
-            console.error("Relay Framework Connection Error Failure:", error.message);
+            console.error("Relay Pipeline Connection Failure Error:", error.message);
             res.status(500).send(error.message);
         }
     }
